@@ -52,7 +52,7 @@ http.createServer(function (request, response) {
           var url = "http://" + hostUrl + request.url;
           httpUtil.get(url, function (err, data) {
             if (err) {
-              throw err;
+              console.error(err);
             }
             response.end(data);
           });
@@ -66,7 +66,7 @@ http.createServer(function (request, response) {
           };
           httpUtil.post(options, requestPost, function (err, data) {
             if (err) {
-              throw err;
+              console.error(err);
             }
             response.end(data);
           });
@@ -83,4 +83,3 @@ http.createServer(function (request, response) {
 }).listen(port);
 
 console.log('cors-server running at http://localhost:' + port);
-
