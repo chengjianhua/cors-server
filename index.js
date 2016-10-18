@@ -12,6 +12,8 @@ var httpUtil = require('./http.util');
 
 var port = config.port || '9000';
 var hostUrl = config.API_URL.baseUrl;
+var isSecret = config.API_URL.secret;
+var protocol = isSecret ? 'https' : 'http';
 
 http.createServer(function (request, response) {
   response.setHeader("Access-Control-Allow-Origin", "*");
@@ -49,11 +51,12 @@ http.createServer(function (request, response) {
       //在end事件触发后，通过querystring.parse将post解析为真正的POST请求格式，然后向客户端返回。
       switch (request.method) {
         case 'GET':
-          var url = "http://" + hostUrl + request.url;
-          httpUtil.get(url, function (err, data) {
+          var url = protocol + "://" + hostUrl + request.url;
+          httpUtil.get(url, isSecret, function (err, data) {
             if (err) {
               console.error(err);
             }
+            console.log(url, hostUrl, request.url);
             response.end(data);
           });
           break;
@@ -82,4 +85,4 @@ http.createServer(function (request, response) {
   }
 }).listen(port);
 
-console.log('cors-server running at http://localhost:' + port);
+console.log('cors-server running at http://localhost:' + port + '.');

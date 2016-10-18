@@ -3,15 +3,10 @@
  * Created on 16/2/29.
  */
 var http = require('http');
+var https = require('https');
 
-/**
- * get转发
- * @param {String} url
- * @param {Function} callback
- */
-function get(url, callback) {
-  var resData = '';
-  http.get(url, function (res) {
+function _getCallback(resData, callback) {
+  return function (res) {
     res.setEncoding('utf8');
     res.on('data', function (data) {
       resData += data;
@@ -19,7 +14,25 @@ function get(url, callback) {
     res.on('end', function () {
       callback(null, resData);
     });
-  }).on('error', function (e) {
+  };
+}
+
+/**
+ * get转发
+ * @param {String} url
+ * @param {Function} callback
+ */
+function get(url, isSecret, callback) {
+  var resData = '';
+  var req = null;
+
+  if (isSecret) {
+    req = https.get(url, _getCallback(resData, callback));
+  } else {
+    req = http.get(url, _getCallback(resData, callback));
+  }
+
+  req.on('error', function (e) {
     console.log("Got error: " + e.message);
     callback(e.message);
   });

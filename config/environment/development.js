@@ -9,6 +9,7 @@
 // ==================================
 module.exports = {
   API_URL:{
-    baseUrl:'api.douban.com'
+    baseUrl:'api.douban.com',
+    secret: true
   }
 };
